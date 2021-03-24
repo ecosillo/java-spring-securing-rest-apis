@@ -31,9 +31,23 @@ public class ResolutionController {
 		return this.resolutions.findById(id);
 	}
 
+/* 
+	Following that, go into ResolutionController and update the make method to include the current username as a method parameter:
+	In this task, you've used the most advanced version of @CurrentSecurityContext; however, there are simpler incarnations. For example, you can inline @CurrentSecurityContext in the method itself, and without an expression:
+	
+	public Resolution make(@CurrentSecurityContext SecurityContext ctx, @RequestBody String text) {
+    	User user = (User) ctx.getAuthentication().getPrincipal(); 
+    
+		Or, you can provide an expression in the inlined annotation:
+	
+	public Resolution make(@CurrentSecurityContext(expression="authentication.name") String owner, @RequestBody String text) {
+    	Resolution resolution = new Resolution(text, owner);
+    	return this.resolutions.save(resolution);
+}	
+*/
 	@PostMapping("/resolution")
-	public Resolution make(@RequestBody String text) {
-		String owner = "user";
+	public Resolution make(@CurrentUsername String owner, @RequestBody String text) {
+		// String owner = "user";
 		Resolution resolution = new Resolution(text, owner);
 		return this.resolutions.save(resolution);
 	}
