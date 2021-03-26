@@ -28,10 +28,13 @@ public class ResolutionsApplication extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-			.authorizeRequests(authz -> authz
-				.mvcMatchers(GET, "/resolutions", "/resolution/**").hasAuthority("resolution:read")
-				.anyRequest().hasAuthority("resolution:write"))
-			.httpBasic(basic -> {});
+				.authorizeRequests(authz -> authz
+        			.anyRequest().authenticated())
+    				.httpBasic(basic -> {});
+			// .authorizeRequests(authz -> authz
+			// 	.mvcMatchers(GET, "/resolutions", "/resolution/**").hasAuthority("resolution:read")
+			// 	.anyRequest().hasAuthority("resolution:write"))
+			// .httpBasic(basic -> {});
 	}
 	
 	//.password("{bcrypt}$2a$10$MywQEqdZFNIYnx.Ro/VQ0ulanQAl34B5xVjK2I/SDZNVGS5tHQ08W")

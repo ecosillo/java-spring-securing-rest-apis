@@ -3,7 +3,7 @@ package io.jzheaux.springsecurity.resolutions;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
+// import java.util.UUID;
 
 @Component
 public class ResolutionInitializer implements SmartInitializingSingleton {
@@ -39,7 +39,12 @@ public class ResolutionInitializer implements SmartInitializingSingleton {
 		User hasWrite = new User("haswrite",  
 			"{bcrypt}$2a$10$fkYoT0rToCLS7e8TJP2JCOTBtcjWCwhuEs6cDfqhiyGrOTU9Dq77m");
 		hasWrite.grantAuthority("resolution:write");
-		this.users.save(hasWrite);
+		this.users.save(hasWrite);	
+
+		
+		User admin = new User("admin", "{bcrypt}$2a$10$3njzOWhsz20aimcpMamJhOnX9Pb4Nk3toq8OO0swIy5EPZnb1YyGe");
+		admin.grantAuthority("ROLE_ADMIN");
+		this.users.save(admin);
 
 	}
 }
