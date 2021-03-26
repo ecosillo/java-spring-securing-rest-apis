@@ -20,6 +20,7 @@ import static org.springframework.http.HttpMethod.GET;
 import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 
+// @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @SpringBootApplication
@@ -28,14 +29,26 @@ public class ResolutionsApplication extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-				.authorizeRequests(authz -> authz
-        			.anyRequest().authenticated())
-    				.httpBasic(basic -> {});
-			// .authorizeRequests(authz -> authz
+			.authorizeRequests(authz -> authz
+				.mvcMatchers(GET, "/resolutions", "/resolution/**").hasAuthority("resolution:read")
+				.anyRequest().hasAuthority("resolution:write"))
+			.httpBasic(basic -> {});
+	}
+
+			// @Override
+			// protected void configure(HttpSecurity http) throws Exception {
+			// 	http
+			// 			.authorizeRequests(authz -> authz
+			//     			.anyRequest().authenticated())
+			// 				.httpBasic(basic -> {});
+
+			// @Override
+			// protected void configure(HttpSecurity http) throws Exception {
+			// 	http			
 			// 	.mvcMatchers(GET, "/resolutions", "/resolution/**").hasAuthority("resolution:read")
 			// 	.anyRequest().hasAuthority("resolution:write"))
 			// .httpBasic(basic -> {});
-	}
+			//}
 	
 	//.password("{bcrypt}$2a$10$MywQEqdZFNIYnx.Ro/VQ0ulanQAl34B5xVjK2I/SDZNVGS5tHQ08W")
 	@Bean

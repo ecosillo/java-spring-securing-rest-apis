@@ -1,5 +1,8 @@
 package io.jzheaux.springsecurity.resolutions;
 
+import org.springframework.security.core.annotation.CurrentSecurityContext;
+
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -11,8 +14,6 @@ For this last task, first, open up the CurrentUsername annotation.
 
 Then, add the expression @CurrentSecurityContext(expression="authentication.name"):
  */
-import org.springframework.security.core.annotation.CurrentSecurityContext;
-
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
