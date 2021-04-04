@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 
 import javax.transaction.Transactional;
 import java.util.Optional;
@@ -18,9 +23,11 @@ import java.util.UUID;
 @RestController
 public class ResolutionController {
 	private final ResolutionRepository resolutions;
+	private final UserRepository users;
 
-	public ResolutionController(ResolutionRepository resolutions) {
+	public ResolutionController(ResolutionRepository resolutions, UserRepository users) {
 		this.resolutions = resolutions;
+		this.users = users;
 	}
 
 	//@CrossOrigin(allowCredentials = "true")
@@ -29,7 +36,16 @@ public class ResolutionController {
 	@PostFilter("@post.filter(#root)")
 	@GetMapping("/resolutions")
 	public Iterable<Resolution> read() {
-		return this.resolutions.findAll();
+		Iterable<Resolution> resolutions = this.resolutions.findAll();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("user:read"))) {
+			for (Resolution resolution : resolutions) {
+				String fullName = this.users.findByUsername(resolution.getOwner())
+						.map(User::getFullName).orElse("Anonymous");
+				resolution.setText(resolution.getText() + ", by " + fullName);
+			}
+		}
+		return resolutions;
 	}
 
 	@PreAuthorize("hasAuthority('resolution:read')")
