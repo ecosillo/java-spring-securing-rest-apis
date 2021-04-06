@@ -54,12 +54,27 @@ public class ResolutionsApplication extends WebSecurityConfigurerAdapter {
 	//.password("{bcrypt}$2a$10$MywQEqdZFNIYnx.Ro/VQ0ulanQAl34B5xVjK2I/SDZNVGS5tHQ08W")
 	
 	@Bean
-	WebMvcConfigurer webMvcConfigurer() {
+	public UserDetailsService userDetailsService(UserRepository users) {
+		return new UserRepositoryUserDetailsService(users);
+
+		//return new JdbcUserDetailsManager(dataSource);
+
+		// return new JdbcUserDetailsManager(dataSource) {
+		// 	@Override
+		// 	protected List<GrantedAuthority> loadUserAuthorities(String username) {
+		// 		return AuthorityUtils.createAuthorityList("resolution:read");
+		// 	}
+		// };
+		
+	}
+
+	@Bean
+	public WebMvcConfigurer webMvcConfigurer() {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
-				    .maxAge(0) // .maxAge(0) // if using local verification
+				    // .maxAge(0) // .maxAge(0) // if using local verification
 					.allowedOrigins("http://localhost:4000")
 					.allowedMethods("HEAD")
 					.allowedHeaders("Authorization");
@@ -75,21 +90,7 @@ public class ResolutionsApplication extends WebSecurityConfigurerAdapter {
     // 	authenticationConverter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
     // 	return authenticationConverter;
 	// }
-	
-	@Bean
-	UserDetailsService userDetailsService(UserRepository users) {
-		return new UserRepositoryUserDetailsService(users);
 
-		//return new JdbcUserDetailsManager(dataSource);
-
-		// return new JdbcUserDetailsManager(dataSource) {
-		// 	@Override
-		// 	protected List<GrantedAuthority> loadUserAuthorities(String username) {
-		// 		return AuthorityUtils.createAuthorityList("resolution:read");
-		// 	}
-		// };
-		
-	}
 	// @Bean
 	// public UserDetailsService userDetailsService() {
 	// 	return new InMemoryUserDetailsManager(

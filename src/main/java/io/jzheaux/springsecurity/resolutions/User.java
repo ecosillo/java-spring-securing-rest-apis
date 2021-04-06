@@ -16,7 +16,7 @@ public class User implements Serializable {
 	@Id
 	UUID id;
 
-	@Column(name="username")
+	@Column(name="USERNAME", length=100)
 	String username;
 
 	@Column
@@ -61,7 +61,7 @@ public class User implements Serializable {
 	}
 
 	public void setFullName(String fullName) {
-		this.username = fullName;
+		this.fullName = fullName;
 	}
 
 	public String getUsername() {

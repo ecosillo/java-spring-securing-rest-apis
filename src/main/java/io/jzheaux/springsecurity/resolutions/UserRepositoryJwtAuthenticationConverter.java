@@ -32,8 +32,13 @@ public class UserRepositoryJwtAuthenticationConverter implements Converter<Jwt, 
         @Override
         public AbstractAuthenticationToken convert(Jwt jwt) {
             String username = jwt.getSubject();
+            System.out.println("============================");
+            System.out.println(username);
             User user = this.users.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("no user"));
+            System.out.println("**********************");
+
+
             Collection<GrantedAuthority> authorities = this.authoritiesConverter.convert(jwt);
             // you'll reconcile the users' authorities in the database with the scopes the user granted to the client in the JWT.
             // now also retrieve the authorities from the end user:

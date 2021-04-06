@@ -53,5 +53,12 @@ public class ResolutionInitializer implements SmartInitializingSingleton {
 		admin.grantAuthority("ROLE_ADMIN");
 		this.users.save(admin);
 
+		Iterable<User> users_list = this.users.findAll();
+	    for (User x : users_list){
+			System.out.println(x.toString());
+			String fullName = this.users.findByUsername(x.getUsername())
+			  	.map(User::getFullName).orElse("Anonymous");
+		}
+
 	}
 }
