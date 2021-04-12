@@ -79,4 +79,19 @@ public class ResolutionController {
 		this.resolutions.complete(id);
 		return read(id);
 	}
+	
+	@PreAuthorize("hasAuthority('resolution:share')")
+	@PostAuthorize("@post.authorize(#root)")
+	@PutMapping("/resolution/{id}/share")
+	@Transactional
+	public Optional<Resolution> share(@AuthenticationPrincipal User user, @PathVariable("id") UUID id) {
+		Optional<Resolution> resolution = read(id);
+		resolution.filter(r -> r.getOwner().equals(user.getUsername()))
+				.map(Resolution::getText).ifPresent(text -> {
+					for (User friend : user.getFriends()) {
+						make(friend.getUsername(), text);
+					}
+				});
+		return resolution;
+	}
 }

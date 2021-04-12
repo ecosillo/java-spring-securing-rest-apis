@@ -32,8 +32,14 @@ public class ResolutionsApplication extends WebSecurityConfigurerAdapter {
 				.mvcMatchers(GET, "/resolutions", "/resolution/**").hasAuthority("resolution:read")
 				.anyRequest().hasAuthority("resolution:write"))
 			.httpBasic(basic -> {})
-			.oauth2ResourceServer(oauth2 -> oauth2.jwt().jwtAuthenticationConverter(this.authenticationConverter))
+			.oauth2ResourceServer(oauth2 -> oauth2.opaqueToken())
 			.cors(cors -> {});
+			/* 			
+				Spring Security requires you to select either JWT or Opaque Token when using Bearer Token authentication. The reason for not supporting both at the same time is because of the differing security semantics around them. Opaque Token has stronger security guarantees, but there is no way when inspecting the token to know whether or not that's what this particular request needs.
+				So, to accept both, you can use AuthenticationManagerResolver and employ your own custom technique to decide which to use.
+ 			*/			
+			//.oauth2ResourceServer(oauth2 -> oauth2.jwt().jwtAuthenticationConverter(this.authenticationConverter))
+
 	}
 
 			// @Override

@@ -43,6 +43,8 @@ public class ResolutionInitializer implements SmartInitializingSingleton {
 		User hasWrite = new User("haswrite",  
 			"{bcrypt}$2a$10$fkYoT0rToCLS7e8TJP2JCOTBtcjWCwhuEs6cDfqhiyGrOTU9Dq77m");
 		hasWrite.setFullName("Has Write");
+		hasWrite.addFriend(hasRead);
+		hasWrite.setSubscription("premium");
 		hasWrite.grantAuthority("resolution:write");
 		hasWrite.grantAuthority("user:read");
 		this.users.save(hasWrite);	
