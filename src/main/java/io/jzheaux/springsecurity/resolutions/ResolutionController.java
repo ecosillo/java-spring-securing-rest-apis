@@ -24,15 +24,17 @@ import java.util.UUID;
 @RestController
 public class ResolutionController {
 	private final ResolutionRepository resolutions;
-	private final UserRepository users;
+	// private final UserRepository users;
+	UserService users; //instead of UserRepository
 
-	public ResolutionController(ResolutionRepository resolutions, UserRepository users) {
-		this.resolutions = resolutions;
+	//public ResolutionController(ResolutionRepository resolutions, UserRepository users) {
+	public ResolutionController(ResolutionRepository resolutions, UserService users) {
+			this.resolutions = resolutions;
 		this.users = users;
 	}
-
+	// Since you are now using Bearer Tokens, you no longer need to pass credentials from the browser to the API. This means that you can remove the allowCredentials from the @CrossOrigin annotation, making your application more secure.
 	//@CrossOrigin(allowCredentials = "true")
-	@CrossOrigin(allowCredentials = "true") // (maxAge = 0) if locally verifying
+	@CrossOrigin // (maxAge = 0) if locally verifying
 	@PreAuthorize("hasAuthority('resolution:read')")
 	@PostFilter("@post.filter(#root)")
 	@GetMapping("/resolutions")
@@ -41,8 +43,11 @@ public class ResolutionController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("user:read"))) {
 			for (Resolution resolution : resolutions) {
-				String fullName = this.users.findByUsername(resolution.getOwner())
-						.map(User::getFullName).orElse("Anonymous");
+				//String fullName = this.users.findByUsername(resolution.getOwner())
+				//		.map(User::getFullName).orElse("Anonymous");
+				String fullName = this.users.getFullName(resolution.getOwner())
+					.orElse("Anonymous");
+				
 				resolution.setText(resolution.getText() + ", by " + fullName);
 			}
 		}
